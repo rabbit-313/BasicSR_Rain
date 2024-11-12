@@ -1,5 +1,5 @@
 # general settings
-name: SwinIR_colorchange_l=-3.85_a=-6.87_b=6.40
+name: test_SwinIR_SRx4_scratch_rain
 model_type: SwinIRModel
 scale: 4
 num_gpu: auto
@@ -7,59 +7,22 @@ manual_seed: 0
 
 # dataset and data loader settings
 datasets:
-  # test_1:
-  #   name: DIV2K_difficult
-  #   type: PairedImageDataset
-  #   dataroot_gt: ../../Data/DIV2K/DIV2K_valid_HR/original
-  #   dataroot_lq: ../../Data/DIV2K/DIV2K_valid_LR_difficult/original
-  #   io_backend:
-  #     type: disk
-  test_2:
-    name: Set5
-    type: PairedImageDataset
-    dataroot_gt: ../../Data/benchmark/Set5/HR
-    dataroot_lq: ../../Data/benchmark/Set5/LR_bicubic/X4
+  test_1:
+    name: Rain-Train
+    type: PairedRainDataset
+    dataroot_gt: ../../Data/HR/JMARAIN/1h/test
+    dataroot_lq: ../../Data/LR/JMARAIN/1h/test
+    filename_tmpl: '{}'
     io_backend:
       type: disk
 
-  test_3:
-    name: Set14
-    type: PairedImageDataset
-    dataroot_gt: ../../Data/benchmark/Set14/HR
-    dataroot_lq: ../../Data/benchmark/Set14/LR_bicubic/X4
-    io_backend:
-      type: disk
-  
-  test_4:
-    name: B100
-    type: PairedImageDataset
-    dataroot_gt: ../../Data/benchmark/B100/HR
-    dataroot_lq: ../../Data/benchmark/B100/LR_bicubic/X4
-    io_backend:
-      type: disk
-  
-  test_5:
-    name: Manga109
-    type: PairedImageDataset
-    dataroot_gt: ../../Data/benchmark/Manga109/HR
-    dataroot_lq: ../../Data/benchmark/Manga109/LR_bicubic/X4
-    io_backend:
-      type: disk
-  
-  test_6:
-    name: Urban100
-    type: PairedImageDataset
-    dataroot_gt: ../../Data/benchmark/Urban100/HR
-    dataroot_lq: ../../Data/benchmark/Urban100/LR_bicubic/X4
-    io_backend:
-      type: disk
 
 # network structures
 network_g:
   type: SwinIR
   upscale: 4
   in_chans: 3
-  img_size: 64 #元は48
+  img_size: 48
   window_size: 8
   img_range: 1.
   depths: [6, 6, 6, 6, 6, 6]
@@ -87,9 +50,5 @@ val:
       test_y_channel: false
     ssim:
       type: calculate_ssim
-      crop_border: 4
-      test_y_channel: false
-    lpips:
-      type: calculate_lpips
       crop_border: 4
       test_y_channel: false

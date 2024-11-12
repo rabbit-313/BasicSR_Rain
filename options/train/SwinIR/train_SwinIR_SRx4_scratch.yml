@@ -22,7 +22,7 @@ datasets:
 
     # data loader
     num_worker_per_gpu: 6
-    batch_size_per_gpu: 4
+    batch_size_per_gpu: 32
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 
@@ -32,8 +32,13 @@ datasets:
   val:
     name: Rain-Val
     type: PairedRainDataset
-    dataroot_gt: ../../Data/HR/JMARAIN/1h/train
-    dataroot_lq: ../../Data/LR/JMARAIN/1h/train
+    dataroot_gt: ../../Data/HR/JMARAIN/1h/val
+    dataroot_lq: ../../Data/LR/JMARAIN/1h/val
+    io_backend:
+      type: disk
+    
+    normalize:
+      upper_bound: 20
   
 
 
@@ -41,7 +46,7 @@ datasets:
 network_g:
   type: SwinIR
   upscale: 4
-  in_chans: 3
+  in_chans: 1
   img_size: 48
   window_size: 8
   img_range: 1.
@@ -84,17 +89,17 @@ train:
 # validation settings
 val:
   val_freq: !!float 5e3
-  save_img: True
+  save_img: False
 
   metrics:
     psnr: # metric name, can be arbitrary
       type: calculate_psnr
       crop_border: 4
       test_y_channel: false
-    ssim: # metric name, can be arbitrary
-      type: calculate_ssim
-      crop_border: 4
-      test_y_channel: false
+    # ssim: # metric name, can be arbitrary
+    #   type: calculate_ssim
+    #   crop_border: 4
+    #   test_y_channel: false
 
 # logging settings
 logger:

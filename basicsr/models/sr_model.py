@@ -6,7 +6,7 @@ from tqdm import tqdm
 from basicsr.archs import build_network
 from basicsr.losses import build_loss
 from basicsr.metrics import calculate_metric
-from basicsr.utils import get_root_logger, imwrite, tensor2img
+from basicsr.utils import get_root_logger, imwrite, tensor2img, imwrite_rain
 from basicsr.utils.registry import MODEL_REGISTRY
 from .base_model import BaseModel
 
@@ -228,7 +228,7 @@ class SRModel(BaseModel):
                     else:
                         save_img_path = osp.join(self.opt['path']['visualization'], dataset_name,
                                                  f'{img_name}_{self.opt["name"]}.png')
-                imwrite(sr_img, save_img_path)
+                imwrite_rain(sr_img, save_img_path)
 
             if with_metrics:
                 # calculate metrics

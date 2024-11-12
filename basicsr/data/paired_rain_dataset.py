@@ -14,6 +14,9 @@ class PairedRainDataset(data.Dataset):
         self.opt = opt
         self.gt_folder, self.lq_folder = opt['dataroot_gt'], opt['dataroot_lq']
         self.file_client = None
+        self.io_backend_opt = opt['io_backend']
+        self.mean = opt['mean'] if 'mean' in opt else None
+        self.std = opt['std'] if 'std' in opt else None
         
         if 'filename_tmpl' in opt:
             self.filename_tmpl = opt['filename_tmpl']
@@ -56,9 +59,9 @@ class PairedRainDataset(data.Dataset):
         # BGR to RGB, HWC to CHW, numpy to tensor
         img_gt, img_lq = img2tensor([img_gt, img_lq], bgr2rgb=True, float32=True)
         # normalize
-        if self.mean is not None or self.std is not None:
-            normalize(img_lq, self.mean, self.std, inplace=True)
-            normalize(img_gt, self.mean, self.std, inplace=True)
+        # if self.mean is not None or self.std is not None:
+        #     normalize(img_lq, self.mean, self.std, inplace=True)
+        #     normalize(img_gt, self.mean, self.std, inplace=True)
 
         return {'lq': img_lq, 'gt': img_gt, 'lq_path': lq_path, 'gt_path': gt_path}
 
