@@ -1,5 +1,5 @@
 # general settings
-name: test_SwinIR_SRx4_scratch_rain
+name: test_SwinIR_SRx4_scratch_rain_d4PDF
 model_type: SwinIRModel
 scale: 4
 num_gpu: auto
@@ -10,8 +10,8 @@ datasets:
   test_1:
     name: Rain-Train
     type: PairedRainDataset
-    dataroot_gt: ../../Data/HR/JMARAIN/1h/test
-    dataroot_lq: ../../Data/LR/JMARAIN/1h/test
+    dataroot_gt: ../../Data/HR/d4PDF/test
+    dataroot_lq: ../../Data/LR/d4PDF/test
     filename_tmpl: '{}'
     io_backend:
       type: disk
@@ -25,7 +25,7 @@ network_g:
   type: SwinIR
   upscale: 4
   in_chans: 1
-  img_size: 32
+  img_size: 16
   window_size: 8
   img_range: 1.
   depths: [6, 6, 6, 6, 6, 6]
@@ -36,8 +36,9 @@ network_g:
   resi_connection: '1conv'
 
 # path
+## ここに学習したモデルのパスを指定してください
 path:
-  pretrain_network_g: ../experiments/train_SwinIR_SRx4_scratch_rain_MSE_lrsize32_JMARAIN_normalize_false/models/net_g_latest.pth
+  pretrain_network_g: ../experiments/train_SwinIR_SRx4_scratch_rain_d4PDF/models/net_g_3000.pth
   param_key_g: params_ema
   strict_load_g: true
 

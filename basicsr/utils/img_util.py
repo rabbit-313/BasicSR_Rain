@@ -94,6 +94,32 @@ def tensor2img(tensor, rgb2bgr=True, out_type=np.uint8, min_max=(0, 1)):
         result = result[0]
     return result
 
+def tensor2img_rain(tensors, rgb2bgr=False, float32=True):
+    """Tensor to numpy array.
+
+    Args:
+        tensors (list[Tensor] | Tensor): Input tensors.
+        rgb2bgr (bool): Whether to change rgb to bgr.
+        float32 (bool): Whether to keep as float32.
+
+    Returns:
+        list[ndarray] | ndarray: NumPy images. If input is a list, returns a list of NumPy arrays.
+    """
+
+    def _tonumpy(tensor, rgb2bgr, float32):
+        img = tensor.squeeze(0).float().detach().cpu().numpy().transpose(1, 2, 0)  # CHW -> HWC
+        if rgb2bgr and img.shape[2] == 3:
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+        if not float32:
+            img = img.astype('uint8')
+        
+        return img
+
+    if isinstance(tensors, list):
+        return [_tonumpy(tensor, rgb2bgr, float32) for tensor in tensors]
+    else:
+        return _tonumpy(tensors, rgb2bgr, float32)
+
 
 def tensor2img_fast(tensor, rgb2bgr=True, min_max=(0, 1)):
     """This implementation is slightly faster than tensor2img.
@@ -153,18 +179,37 @@ def imwrite(img, file_path, params=None, auto_mkdir=True):
     if not ok:
         raise IOError('Failed in writing images.')
     
-def imwrite_rain(img, file_path, params=None, auto_mkdir=True):
-
+def imwrite_rain(sr_img, lq_img, gt_img, file_path, params=None, auto_mkdir=True):
+    """
+    3つの画像を並べて保存する関数。
+    sr_img: SR画像 (スーパー解像度画像)
+    lq_img: LQ画像 (低品質画像)
+    gt_img: GT画像 (グラウンドトゥルース画像)
+    file_path: 保存先のファイルパス
+    params: 未使用（今後の拡張用）
+    auto_mkdir: 保存先ディレクトリを自動作成するか
+    """
+    
+    
     if auto_mkdir:
         dir_name = os.path.abspath(os.path.dirname(file_path))
         os.makedirs(dir_name, exist_ok=True)
 
-    fig, ax = plt.subplots(figsize=(6, 6))
+    # 図のサイズを設定
+    fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+
+    # サブプロットに各画像を表示
+    titles = ["SR Image", "LQ Image", "GT Image"]
+    images = [sr_img, lq_img, gt_img]
+    for ax, img, title in zip(axes, images, titles):
+        heatmap = ax.imshow(img, cmap='jet', vmin=0, vmax=20)  # 色マップを設定
+        ax.set_title(title)  # タイトルを設定
+        ax.axis('off')       # 軸ラベルを非表示
     
-    heatmap = ax.imshow(img, cmap='jet', vmin=0, vmax=20)
-    ax.set_title("SR data heat map")
-    ax.axis('off')  # 軸ラベルを非表示
-    fig.colorbar(heatmap, ax=ax, orientation='vertical', fraction=0.03, pad=0.04)
+    # カラーバーを表示 (SR画像用に配置)
+    fig.colorbar(heatmap, ax=axes, orientation='vertical', fraction=0.03, pad=0.04)
+
+    # 画像を保存
     plt.savefig(file_path)
     plt.close(fig)
 
@@ -185,3 +230,4 @@ def crop_border(imgs, crop_border):
             return [v[crop_border:-crop_border, crop_border:-crop_border, ...] for v in imgs]
         else:
             return imgs[crop_border:-crop_border, crop_border:-crop_border, ...]
+

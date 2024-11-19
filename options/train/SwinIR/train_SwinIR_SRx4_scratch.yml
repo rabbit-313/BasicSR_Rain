@@ -1,5 +1,5 @@
 # general settings
-name: train_SwinIR_SRx4_scratch_rain_d4PDF
+name: train_SwinIR_SRx4_scratch_rain_d4PDF_woaugmentation
 model_type: SwinIRModel
 scale: 4
 num_gpu: auto
@@ -10,15 +10,15 @@ datasets:
   train:
     name: Rain-Train
     type: PairedRainDataset
-    dataroot_gt: ../../Data/HR/d4PDF/train
-    dataroot_lq: ../../Data/LR/d4PDF/train
+    dataroot_gt: ../../Data/HR/d4PDF/train #高解像度データのパス
+    dataroot_lq: ../../Data/LR/d4PDF/train #低解像度データのパス
     filename_tmpl: '{}'
     io_backend:
       type: disk
 
-    gt_size: 64
-    use_hflip: true
-    use_rot: true
+    gt_size: 64 #高解像度画像のサイズ
+    use_hflip: false #augmentationの設定
+    use_rot: false #augmentationの設定
 
     # data loader
     num_worker_per_gpu: 6
@@ -26,7 +26,7 @@ datasets:
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 
-    normalize:
+    normalize: #正規化の設定．白石さんが上限を20mmに設定していたので合わせる
       upper_bound: 20
 
   val:
@@ -43,6 +43,7 @@ datasets:
 
 
 # network structures
+# 超解像モデルのパラメータ設定
 network_g:
   type: SwinIR
   upscale: 4
@@ -81,6 +82,7 @@ train:
   warmup_iter: -1  # no warm up
 
   # losses
+  # 白石さんが損失関数にMSEを使っていたので合わせた
   pixel_opt:
     type: MSELoss
     loss_weight: 1.0
