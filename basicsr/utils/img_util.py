@@ -154,13 +154,14 @@ def imwrite(img, file_path, params=None, auto_mkdir=True):
         raise IOError('Failed in writing images.')
     
 def imwrite_rain(img, file_path, params=None, auto_mkdir=True):
+
     if auto_mkdir:
         dir_name = os.path.abspath(os.path.dirname(file_path))
         os.makedirs(dir_name, exist_ok=True)
-    # 図を作成
+
     fig, ax = plt.subplots(figsize=(6, 6))
-    # HRデータのヒートマップ
-    heatmap = ax.imshow(img, cmap='jet', vmin=0, vmax=1)
+    
+    heatmap = ax.imshow(img, cmap='jet', vmin=0, vmax=20)
     ax.set_title("SR data heat map")
     ax.axis('off')  # 軸ラベルを非表示
     fig.colorbar(heatmap, ax=ax, orientation='vertical', fraction=0.03, pad=0.04)
