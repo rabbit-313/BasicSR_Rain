@@ -1,5 +1,5 @@
 # general settings
-name: train_SwinIR_SRx4_scratch_rain_d4PDF_woaugmentation
+name: train_SwinIR_SRx4_scratch_rain_d4PDF
 model_type: SwinIRModel
 scale: 4
 num_gpu: auto
@@ -17,8 +17,8 @@ datasets:
       type: disk
 
     gt_size: 64 #高解像度画像のサイズ
-    use_hflip: false #augmentationの設定
-    use_rot: false #augmentationの設定
+    use_hflip: True #augmentationの設定
+    use_rot: True #augmentationの設定
 
     # data loader
     num_worker_per_gpu: 6
@@ -98,10 +98,10 @@ val:
   #     type: calculate_psnr
   #     crop_border: 4
   #     test_y_channel: false
-    # ssim: # metric name, can be arbitrary
-    #   type: calculate_ssim
-    #   crop_border: 4
-    #   test_y_channel: false
+  # ssim: # metric name, can be arbitrary
+  #   type: calculate_ssim
+  #   crop_border: 4
+  #   test_y_channel: false
 
 # logging settings
 logger:

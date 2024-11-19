@@ -6,7 +6,7 @@ from tqdm import tqdm
 from basicsr.archs import build_network
 from basicsr.losses import build_loss
 from basicsr.metrics import calculate_metric
-from basicsr.utils import get_root_logger, imwrite, tensor2img, imwrite_rain, tensor2img_rain
+from basicsr.utils import get_root_logger, imwrite, tensor2img, imwrite_rain, tensor2img_rain, save_npy
 from basicsr.utils.registry import MODEL_REGISTRY
 from .base_model import BaseModel
 
@@ -224,14 +224,21 @@ class SRModel(BaseModel):
                 if self.opt['is_train']:
                     save_img_path = osp.join(self.opt['path']['visualization'], img_name,
                                              f'{img_name}_{current_iter}.png')
+                    save_npy_path = osp.join(self.opt['path']['npy'], img_name,
+                                             f'{img_name}_{current_iter}.npy')
                 else:
                     if self.opt['val']['suffix']:
                         save_img_path = osp.join(self.opt['path']['visualization'], dataset_name,
                                                  f'{img_name}_{self.opt["val"]["suffix"]}.png')
+                        save_npy_path = osp.join(self.opt['path']['npy'], dataset_name,
+                                                 f'{img_name}_{self.opt["val"]["suffix"]}.npy')
                     else:
                         save_img_path = osp.join(self.opt['path']['visualization'], dataset_name,
                                                  f'{img_name}_{self.opt["name"]}.png')
+                        save_npy_path = osp.join(self.opt['path']['npy'], dataset_name,
+                                                 f'{img_name}_{self.opt["name"]}.npy')
                 imwrite_rain(sr_img[0], lq_img[0], gt_img[0], save_img_path)
+                save_npy(sr_img, save_npy_path)
 
             if with_metrics:
                 # calculate metrics

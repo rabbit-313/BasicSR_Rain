@@ -10,14 +10,14 @@ datasets:
   test_1:
     name: Rain-Train
     type: PairedRainDataset
-    dataroot_gt: ../../Data/HR/d4PDF/test
-    dataroot_lq: ../../Data/LR/d4PDF/test
+    dataroot_gt: ../../Data/HR/d4PDF/val
+    dataroot_lq: ../../Data/LR/d4PDF/val
     filename_tmpl: '{}'
     io_backend:
       type: disk
     
     normalize:
-      upper_bound: 1
+      upper_bound: 20
 
 
 # network structures
@@ -38,7 +38,7 @@ network_g:
 # path
 ## ここに学習したモデルのパスを指定してください
 path:
-  pretrain_network_g: ../experiments/train_SwinIR_SRx4_scratch_rain_d4PDF/models/net_g_3000.pth
+  pretrain_network_g: ../experiments/train_SwinIR_SRx4_scratch_rain_d4PDF/models/net_g_latest.pth
   param_key_g: params_ema
   strict_load_g: true
 
@@ -47,11 +47,11 @@ path:
 val:
   save_img: true
   suffix: ~ 
-  # metrics:
-  #   psnr: # metric name, can be arbitrary
-  #     type: calculate_psnr
-  #     crop_border: 4
-  #     test_y_channel: false
+  metrics:
+    # psnr: # metric name, can be arbitrary
+    #   type: calculate_psnr
+    #   crop_border: 4
+    #   test_y_channel: false
     # ssim:
     #   type: calculate_ssim
     #   crop_border: 4

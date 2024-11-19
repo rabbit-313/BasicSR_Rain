@@ -202,7 +202,7 @@ def imwrite_rain(sr_img, lq_img, gt_img, file_path, params=None, auto_mkdir=True
     titles = ["SR Image", "LQ Image", "GT Image"]
     images = [sr_img, lq_img, gt_img]
     for ax, img, title in zip(axes, images, titles):
-        heatmap = ax.imshow(img, cmap='jet', vmin=0, vmax=20)  # 色マップを設定
+        heatmap = ax.imshow(img, cmap='jet', vmin=0, vmax=1)  # 色マップを設定
         ax.set_title(title)  # タイトルを設定
         ax.axis('off')       # 軸ラベルを非表示
     
@@ -231,3 +231,15 @@ def crop_border(imgs, crop_border):
         else:
             return imgs[crop_border:-crop_border, crop_border:-crop_border, ...]
 
+
+def save_npy(sr_npy, save_path):
+
+    # 保存先のディレクトリを取得
+    save_dir = os.path.dirname(save_path)
+    
+    # ディレクトリが存在しない場合は作成
+    if save_dir and not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+    
+    # numpy 配列を保存
+    np.save(save_path, sr_npy)
